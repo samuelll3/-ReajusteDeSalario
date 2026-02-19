@@ -29,8 +29,105 @@ app.get("/", (requisicao, reposta) => {
 </html>`;
   reposta.send(codehtml);
 });
-app.listen(port,()=>{  
-    console.log(`Servidor rodando: http://localhost:${port}/`);
-})
+app.listen(port, () => {
+  console.log(`Servidor rodando: http://localhost:${port}/`);
+});
 //outra rota
+app.get("/calcular", (requisicao, resposta) => {
+  const idade = Number(requisicao.query.idade);
+  const sexo = requisicao.query.sexo;
+  const salario_base = Number(requisicao.query.salario_base);
+  const anoContratacao = Number(requisicao.query.anoContratacao);
+  const matricula = Number(requisicao.query.matricula);
+  const ano_atual = 2026
+  const tempo_empresa = ano_atual - anoContratacao
+  let novo_salario = 0
+  let salarioreajuste = 0
 
+  if (isNaN(idade) && idade < 16) {
+    return resposta.send(`<h1> erro </h1>
+            <p> Idade não é valido `);
+  }
+
+  if (isNaN(salario_base)) {
+    return resposta.send(`<h1> erro </h1>
+            <p> Salário base não é valido `);
+  }
+
+  if (
+    isNaN(anoContratacao) ||
+    !Number.isInteger(anoContratacao) ||
+    anoContratacao < 1960
+  ) {
+    return resposta.send(`<h1> erro </h1>
+            <p> Ano de contratação não é valido `);
+  }
+
+  if (isNaN(matricula) || !Number.isInteger(matricula) || matricula < 0) {
+    return resposta.send(`<h1> erro </h1>
+            <p> Matricula não é valido `);
+  }
+
+  if (sexo !== "m" || sexo !== "f") {
+    return resposta.send(`<h1> erro </h1>
+            <p> Sexo inválido`);
+  }
+  
+  if(idade >= 18 && idade <= 39)
+    if( sexo == "m" || sexo == "M"){
+        salarioreajuste = salario_base * 1.1
+        if(tempo_empresa <= 10){
+            novo_salario = salarioreajuste - 10
+        }
+        else{
+            novo_salario = salarioreajuste + 17
+        }
+    } else if(sexo == "f" || sexo == "F"){
+        salarioreajuste = salario_base * 1.08
+        if(tempo_empresa <= 10){
+            novo_salario = salarioreajuste - 11
+        }
+        else{
+            novo_salario = salarioreajuste + 16
+    }
+    //2 condicao tabela
+    if(idade >= 40 && idade <= 69)
+    if( sexo == "m" || sexo == "M"){
+        salarioreajuste = salario_base * 1.08
+        if(tempo_empresa <= 10){
+            novo_salario = salarioreajuste - 5
+        }
+        else{
+            novo_salario = salarioreajuste + 15
+        }
+    } else if(sexo == "f" || sexo == "F"){
+        salarioreajuste = salario_base * 1.1
+        if(tempo_empresa <= 10){
+            novo_salario = salarioreajuste - 7
+        }
+        else{
+            novo_salario = salarioreajuste + 14
+    }
+    //3 condicao tabela
+    if(idade >= 70 && idade <= 99)
+    if( sexo == "m" || sexo == "M"){
+        salarioreajuste = salario_base * 1.15
+        if(tempo_empresa <= 10){
+            novo_salario = salarioreajuste - 15
+        }
+        else{
+            novo_salario = salarioreajuste + 13
+        }
+    } else if(sexo == "f" || sexo == "F"){
+        salarioreajuste = salario_base * 1.17
+        if(tempo_empresa <= 10){
+            novo_salario = salarioreajuste - 17
+        }
+        else{
+            novo_salario = salarioreajuste + 12
+    }
+    
+    
+    
+    
+});
